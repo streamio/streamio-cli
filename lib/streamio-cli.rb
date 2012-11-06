@@ -15,18 +15,22 @@ module Streamio
       configure_streamio_gem
       number_of_videos = Video.count
       current_video = 0
-      Video.all.each do |video|
-        current_video += 1
-        puts "\nVideo #{current_video} / #{number_of_videos}: #{video.title}"
+      requests_needed = (number_of_videos / 100) + 1
 
-        title = "Original (#{bytes_to_megabytes(video.original_video['size'])})"
-        download("http://#{video.original_video['http_uri']}", title)
+      requests_needed.times do |i|
+        Video.all(:skip => i * 100, :limit => 100).each do |video|
+          current_video += 1
+          puts "\nVideo #{current_video} / #{number_of_videos}: #{video.title}"
 
-        next unless options[:include_transcodings]
+          title = "Original (#{bytes_to_megabytes(video.original_video['size'])})"
+          download("http://#{video.original_video['http_uri']}", title)
 
-        video.transcodings.each do |transcoding|
-          title = "#{transcoding['title']} (#{bytes_to_megabytes(transcoding['size'])})"
-          download("http://#{transcoding['http_uri']}", title)
+          next unless options[:include_transcodings]
+
+          video.transcodings.each do |transcoding|
+            title = "#{transcoding['title']} (#{bytes_to_megabytes(transcoding['size'])})"
+            download("http://#{transcoding['http_uri']}", title)
+          end
         end
       end
     end
