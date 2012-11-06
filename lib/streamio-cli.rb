@@ -1,5 +1,6 @@
 require 'net/http'
 require 'uri'
+require 'fileutils'
 require 'thor'
 require 'streamio'
 require 'ruby-progressbar'
@@ -13,33 +14,62 @@ module Streamio
     method_option :include_transcodings, :aliases => '-i', :type => :boolean
     def export
       configure_streamio_gem
-      number_of_videos = Video.count
-      current_video = 0
-      requests_needed = (number_of_videos / 100) + 1
+      download_videos
+      download_audios
+    rescue SocketError
+      puts "[ERROR]"
+      puts "Could not connect to the internet, please check your connection and try again."
+      exit
+    end
+
+    private
+     def configure_streamio_gem
+      Streamio.configure do |c|
+        c.username = options[:username]
+        c.password = options[:password]
+      end
+    end
+
+    def download_videos
+      number_of_items = Video.count
+      current_item = 0
+      requests_needed = (number_of_items / 100) + 1
 
       requests_needed.times do |i|
         Video.all(:skip => i * 100, :limit => 100).each do |video|
-          current_video += 1
-          puts "\nVideo #{current_video} / #{number_of_videos}: #{video.title}"
+          current_item += 1
+          puts "\nVideo #{current_item} / #{number_of_items} - #{video.title} - #{video.id}"
 
-          title = "Original (#{bytes_to_megabytes(video.original_video['size'])})"
-          download("http://#{video.original_video['http_uri']}", title)
+          path = FileUtils.mkdir_p("streamio-export/videos/#{video.id}").first
+          progress_bar_title = "Original (#{bytes_to_megabytes(video.original_video['size'])})"
+          File.open("#{path}/#{video.id}.json", "w:utf-8") { |file| file.write(video.attributes.to_json) }
+          download("http://#{video.original_video['http_uri']}", path, progress_bar_title)
 
           next unless options[:include_transcodings]
 
           video.transcodings.each do |transcoding|
-            title = "#{transcoding['title']} (#{bytes_to_megabytes(transcoding['size'])})"
-            download("http://#{transcoding['http_uri']}", title)
+            progress_bar_title = "#{transcoding['title']} (#{bytes_to_megabytes(transcoding['size'])})"
+            download("http://#{transcoding['http_uri']}", path, progress_bar_title)
           end
         end
       end
     end
 
-    private
-    def configure_streamio_gem
-      Streamio.configure do |c|
-        c.username = options[:username]
-        c.password = options[:password]
+    def download_audios
+      number_of_items = Audio.count
+      current_item = 0
+      requests_needed = (number_of_items / 100) + 1
+
+      requests_needed.times do |i|
+        Audio.all(:skip => i * 100, :limit => 100).each do |audio|
+          current_item += 1
+          puts "\nAudio #{current_item} / #{number_of_items}: #{audio.title}"
+
+          path = FileUtils.mkdir_p("streamio-export/audios/#{audio.id}").first
+          progress_bar_title = "Original (#{bytes_to_megabytes(audio.original_file['size'])})"
+          File.open("#{path}/#{audio.id}.json", "w:utf-8") { |file| file.write(audio.attributes.to_json) }
+          download("http://#{audio.original_file['http_uri']}", progress_bar_title)
+        end
       end
     end
 
@@ -48,29 +78,30 @@ module Streamio
       "%.1fMB" % [megabytes]
     end
 
-    def download(url, title)
-      url = URI.parse(url)
-      filename = File.basename(url.path)
-      http = Net::HTTP.new(url.host, url.port)
-      size = http.request_head(url.path)['Content-Length'].to_i
-      bytes_loaded = 0
+    def download(url, path, progress_bar_title)
+      uri = URI.parse(url)
+      filename = "#{path}/#{File.basename(uri.path)}"
+      http = Net::HTTP.new(uri.host, uri.port)
+      size = http.request_head(uri.path)['Content-Length'].to_i
+      bytes_loaded = nil
 
       if File.exist?(filename)
         bytes_loaded = File.size(filename)
         if size == bytes_loaded
-          puts "  #{title}: Already downloaded..."
+          puts "  #{progress_bar_title}: Already downloaded..."
           return
         end
       end
 
       progress_bar = ProgressBar.create(
-        :title => "  #{"[Resuming] " if bytes_loaded > 0}#{title}",
+        :title => "  #{"[Resuming] " if bytes_loaded}#{progress_bar_title}",
         :starting_at => bytes_loaded,
         :total => size,
-        :format => "%t: |%B| %e"
+        :format => "%t: |%B| %P%"
       )
 
-      http.request_get(url.path, 'Range' => "bytes=#{bytes_loaded}-") do |response|
+      headers = bytes_loaded ? {'Range' => "bytes=#{bytes_loaded}-"} : {}
+      http.request_get(uri.path, headers) do |response|
         File.open(filename, "a:binary") do |file|
           response.read_body do |data|
             progress_bar.progress += data.length
