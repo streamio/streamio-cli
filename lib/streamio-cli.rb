@@ -83,26 +83,22 @@ module Streamio
       filename = "#{path}/#{File.basename(uri.path)}"
       http = Net::HTTP.new(uri.host, uri.port)
       size = http.request_head(uri.path)['Content-Length'].to_i
-      bytes_loaded = nil
+      bytes_loaded = File.exist?(filename) ? File.size(filename) : 0
 
-      if File.exist?(filename)
-        bytes_loaded = File.size(filename)
-        if size == bytes_loaded
-          puts "  #{progress_bar_title}: Already downloaded..."
-          return
-        end
+      if size == bytes_loaded
+        puts "  #{progress_bar_title}: Already downloaded..."
+        return
       end
 
       progress_bar = ProgressBar.create(
-        :title => "  #{"[Resuming] " if bytes_loaded}#{progress_bar_title}",
-        :starting_at => bytes_loaded,
+        :title => "  #{progress_bar_title}",
+        :starting_at => 0,
         :total => size,
         :format => "%t: |%B| %P%"
       )
 
-      headers = bytes_loaded ? {'Range' => "bytes=#{bytes_loaded}-"} : {}
-      http.request_get(uri.path, headers) do |response|
-        File.open(filename, "a:binary") do |file|
+      http.request_get(uri.path) do |response|
+        File.open(filename, "w:binary") do |file|
           response.read_body do |data|
             progress_bar.progress += data.length
             file << data
