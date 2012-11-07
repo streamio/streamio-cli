@@ -6,7 +6,7 @@ require 'streamio-cli/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "streamio-cli"
-  gem.version       = Streamio::Exporter::VERSION
+  gem.version       = Streamio::CLI::VERSION
   gem.authors       = ["David Backeus"]
   gem.email         = ["david.backeus@streamio.com"]
   gem.summary       = "Command line interface for exporting data from Streamio accounts."

@@ -6,11 +6,11 @@ require 'streamio'
 require 'ruby-progressbar'
 require 'streamio-cli/version'
 
-module Streamio
+module Streamio::CLI
   class SlowDownloadError < StandardError
   end
 
-  class CLI < Thor
+  class App < Thor
     desc "export", "export data from target account"
     method_option :username, :desc => 'api username', :aliases => '-u', :required => true
     method_option :password, :desc => 'api password', :aliases => '-p', :required => true
@@ -34,12 +34,12 @@ module Streamio
     end
 
     def download_videos
-      number_of_items = Video.count
+      number_of_items = ::Streamio::Video.count
       current_item = 0
       requests_needed = (number_of_items / 100) + 1
 
       requests_needed.times do |i|
-        Video.all(:skip => i * 100, :limit => 100).each do |video|
+        ::Streamio::Video.all(:skip => i * 100, :limit => 100).each do |video|
           current_item += 1
           puts "\nVideo #{current_item} / #{number_of_items} - #{video.title} - #{video.id}"
 
@@ -59,12 +59,12 @@ module Streamio
     end
 
     def download_audios
-      number_of_items = Audio.count
+      number_of_items = ::Streamio::Audio.count
       current_item = 0
       requests_needed = (number_of_items / 100) + 1
 
       requests_needed.times do |i|
-        Audio.all(:skip => i * 100, :limit => 100).each do |audio|
+        ::Streamio::Audio.all(:skip => i * 100, :limit => 100).each do |audio|
           current_item += 1
           puts "\nAudio #{current_item} / #{number_of_items}: #{audio.title}"
 
@@ -130,4 +130,4 @@ module Streamio
   end
 end
 
-Streamio::CLI.start
+Streamio::CLI::App.start

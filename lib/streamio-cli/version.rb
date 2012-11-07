@@ -1,5 +1,5 @@
 module Streamio
-  module Exporter
-    VERSION = "0.0.1"
+  module CLI
+    VERSION = "0.5.0"
   end
 end
