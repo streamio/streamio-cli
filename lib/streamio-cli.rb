@@ -4,7 +4,6 @@ require 'fileutils'
 require 'thor'
 require 'streamio'
 require 'ruby-progressbar'
-require 'excon'
 require 'streamio-cli/version'
 
 module Streamio
@@ -82,25 +81,33 @@ module Streamio
     def download(url, path, progress_bar_title)
       uri = URI.parse(url)
       filename = "#{path}/#{File.basename(uri.path)}"
-      size = Excon.head(url).headers['Content-Length'].to_i
+      http = Net::HTTP.new(uri.host, uri.port)
+      size = http.request_head(uri.path)['Content-Length'].to_i
+      bytes_loaded = nil
 
-      if File.exist?(filename) && size == File.size(filename)
-        puts "  #{progress_bar_title}: Already downloaded..."
-        return
+      if File.exist?(filename)
+        bytes_loaded = File.size(filename)
+        if size == bytes_loaded
+          puts "  #{progress_bar_title}: Already downloaded..."
+          return
+        end
       end
 
       progress_bar = ProgressBar.create(
-        :title => "  #{progress_bar_title}",
-        :starting_at => 0,
+        :title => "  #{"[Resuming] " if bytes_loaded}#{progress_bar_title}",
+        :starting_at => bytes_loaded,
         :total => size,
         :format => "%t: |%B| %P%"
       )
 
-      File.open(filename, "w:binary") do |file|
-        Excon.get(url, :response_block => lambda do |data, remaining_bytes, total_bytes|
-          progress_bar.progress += data.length
-          file << data
-        end)
+      headers = bytes_loaded ? {'Range' => "bytes=#{bytes_loaded}-"} : {}
+      http.request_get(uri.path, headers) do |response|
+        File.open(filename, "a:binary") do |file|
+          response.read_body do |data|
+            progress_bar.progress += data.length
+            file << data
+          end
+        end
       end
     end
   end
