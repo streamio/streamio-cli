@@ -42,5 +42,10 @@ be availible:
     streamio-export/videos/<video_id>/<video_id>.json
     streamio-export/videos/<audio_id>/<audio_id>.json
 
+The export is idempotent - meaning that if you run it multiple
+times from the same directory it will not re-download already
+downloaded files. So don't worry about interupting the download
+process to continue another time.
+
 Note that it is likely that you will need a developer to actually
 make use of the exported material.
