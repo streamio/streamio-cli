@@ -9,7 +9,7 @@ A gem for interacting with Streamio through the command line.
 ## Usage
 
 After installation you can use the streamio command from your
-terminal. To get a list of available tasks run `streamio` without
+command line. To get a list of available tasks run `streamio` without
 any arguments.
 
 To get help on a specific task run `streamio help name_of_task`.
@@ -19,7 +19,7 @@ and available options for the export task.
 ### Export
 
 You can use the export task to download all videos and audios
-from your Streamio account. First use your terminal to navigate
+from your Streamio account. First use your command line to navigate
 to a directory where you wish the export to be downloaded to.
 Then use the command together with your api username and password
 found under Account Settings > API when logged in to streamio.com.
