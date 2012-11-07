@@ -7,6 +7,9 @@ require 'ruby-progressbar'
 require 'streamio-cli/version'
 
 module Streamio
+  class SlowDownloadError < StandardError
+  end
+
   class CLI < Thor
     desc "export", "export data from target account"
     method_option :username, :desc => 'api username', :aliases => '-u', :required => true
@@ -97,14 +100,32 @@ module Streamio
         :format => "%t: |%B| %P%"
       )
 
+      waiting_for_speed_test = true
+      start_time = nil
       http.request_get(uri.path) do |response|
         File.open(filename, "w:binary") do |file|
           response.read_body do |data|
             progress_bar.progress += data.length
             file << data
+
+            if waiting_for_speed_test
+              start_time ||= Time.now
+              bytes_loaded_since_connection = progress_bar.progress
+              if bytes_loaded_since_connection > 524288
+                waiting_for_speed_test = false
+                seconds_taken = Time.now - start_time
+                bytes_per_second = bytes_loaded_since_connection / seconds_taken
+                raise SlowDownloadError if bytes_per_second < 65536
+              end
+            end
           end
         end
       end
+    rescue SlowDownloadError
+      http.finish if http.started?
+      progress_bar.stop
+      puts "  Slow download detected - retrying!"
+      retry
     end
   end
 end
