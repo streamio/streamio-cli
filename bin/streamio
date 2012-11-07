@@ -2,7 +2,6 @@
 
 begin
   require 'rubygems'
-  require 'bundler/setup'
   gem 'streamio-cli'
 rescue LoadError
 end
