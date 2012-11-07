@@ -103,7 +103,7 @@ module Streamio::CLI
       waiting_for_speed_test = true
       start_time = nil
       http.request_get(uri.path) do |response|
-        File.open(filename, "w:binary") do |file|
+        File.open(filename, "wb") do |file|
           response.read_body do |data|
             progress_bar.progress += data.length
             file << data
