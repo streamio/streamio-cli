@@ -1,29 +1,46 @@
-# Streamio::Exporter
+# Streamio CLI (Command Line Interface)
 
-TODO: Write a gem description
+A gem for interacting with Streamio through the command line.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'streamio-exporter'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install streamio-exporter
+    gem install streamio-exporter
 
 ## Usage
 
-TODO: Write usage instructions here
+After installation you can use the streamio command from your
+terminal. To get a list of available tasks run `streamio` without
+any arguments.
 
-## Contributing
+To get help on a specific task run `streamio help name_of_task`.
+For example run `streamio help export` to get usage scenario
+and available options for the export task.
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+### Export
+
+You can use the export task to download all videos and audios
+from your Streamio account. First use your terminal to navigate
+to a directory where you wish the export to be downloaded to.
+Then use the command together with your api username and password
+found under Account Settings > API when logged in to streamio.com.
+
+    streamio export -u api_username -p api_password
+
+By default only the original files will be downloaded. If you
+wish to include transcodings you may add the `-i` parameter.
+
+    streamio export -u api_username -p api_password -i
+
+The export will use the following file structure for the downloads:
+
+    streamio-export/videos/<video_id>/<video_filename>
+    streamio-export/audios/<audio_id>/<audio_filename>
+
+A json file containing the metadata of each resource will also
+be availible:
+
+    streamio-export/videos/<video_id>/<video_id>.json
+    streamio-export/videos/<audio_id>/<audio_id>.json
+
+Note that it is likely that you will need a developer to actually
+make use of the exported material.
