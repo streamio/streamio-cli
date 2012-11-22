@@ -4,7 +4,7 @@ A gem for interacting with Streamio through the command line.
 
 ## Installation
 
-    gem install streamio-exporter
+    gem install streamio-cli
 
 ## Usage
 
