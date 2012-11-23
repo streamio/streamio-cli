@@ -1,3 +1,8 @@
+## 0.7.0 2012-11-23
+
+* Added automatic retry to download timeouts
+* Improved error / success messages
+
 ## 0.6.0 2012-11-07
 
 * Fix writing to binary file on Windows
