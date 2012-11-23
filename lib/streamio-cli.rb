@@ -20,6 +20,10 @@ module Streamio::CLI
       download_videos
       download_audios
       puts "\nAll files successfully downloaded!"
+    rescue RestClient::Unauthorized
+      puts "[ERROR]"
+      puts "Wrong username or password, please double check that the credentials provided are the same as on your API page on streamio.com."
+      exit
     rescue SocketError
       puts "[ERROR]"
       puts "Could not connect to the internet, please check your connection and try again."
