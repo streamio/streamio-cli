@@ -19,6 +19,7 @@ module Streamio::CLI
       configure_streamio_gem
       download_videos
       download_audios
+      puts "\nAll files successfully downloaded!"
     rescue SocketError
       puts "[ERROR]"
       puts "Could not connect to the internet, please check your connection and try again."
