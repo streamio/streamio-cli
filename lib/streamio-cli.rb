@@ -121,10 +121,14 @@ module Streamio::CLI
           end
         end
       end
-    rescue SlowDownloadError
+    rescue SlowDownloadError, Timeout::Error => e
       http.finish if http.started?
       progress_bar.stop
-      puts "  Slow download detected - retrying!"
+      if e.class == SlowDownloadError
+        puts "  Slow download detected - retrying!"
+      else
+        puts "  Download timed out - retrying!"
+      end
       retry
     end
   end
