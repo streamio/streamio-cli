@@ -1,3 +1,7 @@
+## 0.7.1 2012-12-03
+
+* Bumped streamio gem version for ruby 1.8 support.
+
 ## 0.7.0 2012-11-23
 
 * Added automatic retry to download timeouts
