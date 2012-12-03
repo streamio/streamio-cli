@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
 
   gem.executables   = "streamio"
 
-  gem.add_dependency "streamio", "~> 1.0.4"
+  gem.add_dependency "streamio", "~> 1.0.6"
   gem.add_dependency "thor", "~> 0.16.0"
   gem.add_dependency "ruby-progressbar", "~> 1.0.2"
 
