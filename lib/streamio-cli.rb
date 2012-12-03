@@ -6,6 +6,10 @@ require 'streamio'
 require 'ruby-progressbar'
 require 'streamio-cli/version'
 
+# Necessary evil to avoid the infamous OpenSSL::SSL::SSLError
+# on certain platforms (we saw it happen last on Windows 7)
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
 module Streamio::CLI
   class SlowDownloadError < StandardError
   end
