@@ -1,3 +1,7 @@
+## 0.7.4 2012-12-03
+
+* Use the skip_ssl_verification option on the updated Streamio gem.
+
 ## 0.7.3 2012-12-03
 
 * Don't verify SSL peer to avoid bugging out on Windows platforms (and possibly others).
