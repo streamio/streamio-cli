@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.summary       = "Command line interface for exporting data from Streamio accounts."
   gem.homepage      = "https://github.com/streamio/streamio-exporter"
 
-  gem.files         = Dir.glob("lib/**/*") + Dir.glob("bin/*") + %w(README.md LICENSE CHANGELOG.md)
+  gem.files         = Dir.glob("lib/**/*") + Dir.glob("bin/*") + %w(README.md LICENSE HISTORY.md)
 
   gem.executables   = "streamio"
 
