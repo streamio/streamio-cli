@@ -1,3 +1,7 @@
+## 0.7.3 2012-12-03
+
+* Don't verify SSL peer to avoid bugging out on Windows platforms (and possibly others).
+
 ## 0.7.2 2012-12-03
 
 * Bumped streamio gem version for ruby 1.8 support.
