@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-# This script is tested through manual acceptance tests
+# This script is tested through manual acceptance tests.
 # This file mostly provides a starting point if proper
 # tests were to be added in the future.
 
