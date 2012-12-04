@@ -1,3 +1,7 @@
+## 0.7.6 2012-12-04
+
+* Replace to_json with MultiJson.dump for ruby 1.8 support.
+
 ## 0.7.5 2012-12-03
 
 * Fix audio downloading.
