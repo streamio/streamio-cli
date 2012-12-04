@@ -1,3 +1,7 @@
+## 0.7.5 2012-12-03
+
+* Fix audio downloading.
+
 ## 0.7.4 2012-12-03
 
 * Use the skip_ssl_verification option on the updated Streamio gem.
