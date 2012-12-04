@@ -77,7 +77,7 @@ module Streamio::CLI
           path = FileUtils.mkdir_p("streamio-export/audios/#{audio.id}").first
           progress_bar_title = "Original (#{bytes_to_megabytes(audio.original_file['size'])})"
           File.open("#{path}/#{audio.id}.json", "w:utf-8") { |file| file.write(audio.attributes.to_json) }
-          download("http://#{audio.original_file['http_uri']}", progress_bar_title)
+          download("http://#{audio.original_file['http_uri']}", path, progress_bar_title)
         end
       end
     end

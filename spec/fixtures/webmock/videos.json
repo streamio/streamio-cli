@@ -1,0 +1,44 @@
+[
+    {
+        "account_id": "4c50424cb35ea827c0000005",
+        "aspect_ratio_multiplier": 1.7777777777777777,
+        "created_at": "2010-11-18T14:45:43Z",
+        "description": null,
+        "duration": 29.899999999999999,
+        "image_id": null,
+        "plays": 2,
+        "progress": 1.0,
+        "state": "ready",
+        "tags": [
+            "Pre Encoded"
+        ],
+        "title": "Pre-encoded 30 Sec",
+        "updated_at": "2010-11-18T14:45:47Z",
+        "id": "4ce53c17b35ea86d7300000g",
+        "original_video": {
+            "http_uri": "d253c4ja9jigvu.cloudfront.net/original_videos/4c50424cb35ea827c0000005_4ce53c17b35ea86d7300000g.mp4",
+            "size": 3795530
+        },
+        "transcodings": [
+            {
+                "progress": 1.0,
+                "size": 3795530,
+                "state": "ready",
+                "title": "Original",
+                "http_uri": "d253c4ja9jigvu.cloudfront.net/videos/4c50424cb35ea827c0000005_4ce53c17b35ea86d7300000g_original.mp4",
+                "rtmp_uri": "s1li48qzf9z15e.cloudfront.net/cfx/st/videos/4c50424cb35ea827c0000005_4ce53c17b35ea86d7300000g_original.mp4",
+                "rtmp_base_uri": "s1li48qzf9z15e.cloudfront.net/cfx/st",
+                "rtmp_stream_uri": "mp4:videos/4c50424cb35ea827c0000005_4ce53c17b35ea86d7300000g_original.mp4",
+                "width": 640,
+                "height": 360,
+                "bitrate": 1016,
+                "id": "4ce53c17b35ea86d73000012"
+            }
+        ],
+        "screenshot": {
+            "original": "d253c4ja9jigvu.cloudfront.net/images/4c50424cb35ea827c0000005_4ce53c17b35ea86d73000011_original.jpg",
+            "normal": "d253c4ja9jigvu.cloudfront.net/images/4c50424cb35ea827c0000005_4ce53c17b35ea86d73000011_normal.jpg",
+            "thumb": "d253c4ja9jigvu.cloudfront.net/images/4c50424cb35ea827c0000005_4ce53c17b35ea86d73000011_thumb.jpg"
+        }
+    }
+]
