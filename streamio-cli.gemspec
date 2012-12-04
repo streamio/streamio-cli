@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "streamio", "~> 1.0.7"
   gem.add_dependency "thor", "~> 0.16.0"
   gem.add_dependency "ruby-progressbar", "~> 1.0.2"
+  gem.add_dependency "multi_json", "~> 1.3"
 
   gem.add_development_dependency "rake", "~> 10.0"
   gem.add_development_dependency "rspec", "~> 2.7"

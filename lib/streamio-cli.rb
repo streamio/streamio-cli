@@ -51,7 +51,7 @@ module Streamio::CLI
 
           path = FileUtils.mkdir_p("streamio-export/videos/#{video.id}").first
           progress_bar_title = "Original (#{bytes_to_megabytes(video.original_video['size'])})"
-          File.open("#{path}/#{video.id}.json", "w:utf-8") { |file| file.write(video.attributes.to_json) }
+          File.open("#{path}/#{video.id}.json", "w:utf-8") { |file| file.write(MultiJson.dump(video.attributes)) }
           download("http://#{video.original_video['http_uri']}", path, progress_bar_title)
 
           next unless options[:include_transcodings]
@@ -76,7 +76,7 @@ module Streamio::CLI
 
           path = FileUtils.mkdir_p("streamio-export/audios/#{audio.id}").first
           progress_bar_title = "Original (#{bytes_to_megabytes(audio.original_file['size'])})"
-          File.open("#{path}/#{audio.id}.json", "w:utf-8") { |file| file.write(audio.attributes.to_json) }
+          File.open("#{path}/#{audio.id}.json", "w:utf-8") { |file| file.write(MultiJson.dump(audio.attributes)) }
           download("http://#{audio.original_file['http_uri']}", path, progress_bar_title)
         end
       end
